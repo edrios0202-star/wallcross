@@ -396,7 +396,6 @@ const QUIZ_BANK=[
   {id:14,topic:"Secondary Loans",day:9,q:"Key difference between loan assignment and participation:",opts:["They are the same thing","Assignment: buyer becomes lender of record. Participation: buyer gets economic interest only, seller remains lender of record","Assignments only for investment-grade loans","Participations always require borrower consent"],correct:1,exp:"In assignment the buyer becomes a direct party to the loan. In participation, economic risk transfers but the original lender retains the legal relationship."},
   {id:15,topic:"Secondary Loans",day:9,q:"A big boy letter is:",opts:["Borrower consent to transfer","Buyer acknowledges seller may hold MNPI and agrees to proceed — waiving information asymmetry claims but NOT fraud","A Federal Reserve regulatory filing","A commitment letter confirming credit capacity"],correct:1,exp:"Big boy letters do not protect against fraud. If the seller actively misrepresents information, the letter provides no defence."},
   {id:16,topic:"Convertibles",day:8,q:"A hedge fund is wall-crossed at 10am. Deal announced 4pm. Fund sold shares at 2pm. Primary concern:",opts:["None — acting on own judgment","Traded while in possession of MNPI — the convertible deal is material and non-public, meaning the short sale may constitute insider trading","Only if the fund profited","A conflict but not insider trading"],correct:1,exp:"This is a classic convertible bond insider trading scenario. The SEC has brought numerous enforcement actions on exactly this fact pattern."},
-],
   {id:17,topic:"Aviation Finance",day:11,q:"What makes aviation finance compliance-distinct from standard corporate lending?",opts:["No difference — aviation is treated identically to corporate debt","The cross-border nature of aircraft creates sanctions and export control dimensions not present in domestic corporate lending","Aviation is exempt from most financial regulations","Aircraft loans are always publicly listed securities"],correct:1,exp:"Aircraft cross international borders and are registered in multiple jurisdictions. This creates sanctions exposure, export control obligations for US-manufactured aircraft, and cross-border complexity that standard corporate deals don't have."},
   {id:18,topic:"CMBS",day:13,q:"What is the purpose of the Reg RR risk retention rule in securitization?",opts:["To prevent banks from issuing too many securities","To require originators to retain 5% of credit risk — aligning their incentives with investors so they don't originate bad loans just to sell them off","To limit the size of individual tranches","To require CMBS to be rated by two agencies"],correct:1,exp:"Reg RR addresses the originate-to-distribute problem from 2008. Originators had no incentive to maintain credit standards if selling all risk to investors. The 5% retention requirement realigns incentives."},
   {id:19,topic:"CLOs",day:17,q:"How does the Volcker Rule currently treat CLOs?",opts:["CLOs are fully prohibited — banks cannot invest in them","CLOs backed primarily by loans qualify for the loan securitization exclusion from the covered fund definition — banks can invest and sponsor them within limits","CLOs are treated as proprietary trading positions","Banks can invest in CLOs freely with no restrictions"],correct:1,exp:"The loan securitization exclusion means CLOs backed primarily by loans (not bonds) fall outside the covered fund definition. The distinction between loan CLOs and bond CLOs is practically important for Volcker compliance."},
@@ -439,7 +438,6 @@ const SCENARIOS={
   "Convertibles":[{title:"The short seller",difficulty:"medium",text:"Your bank is issuing a convertible bond for a listed company. The deal is being wall-crossed with five hedge funds this afternoon — they will receive non-public information about the terms before the deal is announced tomorrow morning. One of the hedge funds calls the syndicate desk after being wall-crossed and says they want to immediately establish a short position in the company's equity as a 'delta hedge.' The banker asks: 'This is normal practice for convertible investors — is it okay for them to short now?' What is your advice?"},{title:"The derivatives desk",difficulty:"hard",text:"Your bank is arranging a €300m convertible bond for a listed European company. The equity derivatives desk has heard rumours about the deal through the market and wants to start trading options on the issuer — they say they haven't been formally wall-crossed and are acting on public information only. The head of derivatives calls you to confirm they are 'clean.' What is your analysis?"}],
   "Secondary Loan Market":[{title:"The agent bank sale",difficulty:"hard",text:"Your bank is the agent bank on a £300m leveraged loan. In that role you receive monthly financial reporting from the borrower and are currently aware that the company is in private discussions about a potential covenant waiver — a fact not publicly known. Your bank's loan trading desk wants to sell down £50m of its own position in the secondary market. The trading desk says: 'We do this all the time — we can just use a big boy letter.' What is your analysis?"},{title:"The creditor committee",difficulty:"hard",text:"Your bank sits on the creditor committee for a distressed borrower. In that role you have received detailed non-public financial projections, asset valuations, and a draft restructuring support agreement. Your bank's credit trading desk now wants to trade out of its position in the borrower's term loan. The trader says: 'Can we just get a big boy letter from the buyer and proceed?' What do you tell him?"}],
   "Mixed":[{title:"The complex mandate",difficulty:"hard",text:"A private equity firm has asked your bank to: (1) advise on the acquisition of a listed UK company for £1.5bn; (2) arrange a £900m leveraged loan; and (3) arrange a £200m convertible bond to refinance existing PE fund debt. The deal teams across advisory, leveraged finance, and ECM all want to start work immediately. A senior banker asks: 'What do we need to do from compliance before we kick off?' Give your structured answer covering all three products."},{title:"The information barrier failure",difficulty:"hard",text:"It's Monday morning. You receive an urgent email from the head of equities. Over the weekend it emerged that an equity trader bought shares in a listed company on Friday afternoon. It has now come to light that the M&A team received an acquisition mandate for that company on Thursday morning and the target was added to the restricted list Thursday afternoon. The trader says he didn't know about the restricted list. What are the immediate steps you take and what are the key compliance issues?"}],
-},
   "Aviation Finance":[
     {title:"The sanctioned airline",difficulty:"hard",text:"Your bank is arranging a $500m secured loan for a Middle Eastern airline to finance 10 new aircraft. Two days before signing, your AML team flags that one of the airline's minority shareholders — holding 8% — appears on a watch list. The airline says the shareholder is a passive investor with no operational involvement. The deal team wants to proceed. What do you do?"},
     {title:"The cross-border lease",difficulty:"medium",text:"A European leasing company wants your bank to finance an operating lease of three aircraft to a carrier in a country with US export restrictions on certain aircraft components. The aircraft are US-manufactured. The deal team says: 'This is just a lease — export controls don't apply to us.' What is your analysis?"}
@@ -537,7 +535,7 @@ const curDay=()=>DAYS.find(d=>!S.completedDays[d.day])||DAYS[DAYS.length-1];
 const isWeak=(id)=>{const qs=S.quizHistory.filter(q=>q.dayId===id);if(!qs.length)return false;return qs[qs.length-1].score/qs[qs.length-1].total<0.6;};
 const isDue=(id)=>{if(!S.completedDays[id])return false;return(Date.now()-new Date(S.completedDays[id]).getTime())/86400000>14;};
 const avgScore=()=>{const r=S.quizHistory.filter(q=>!q.caseGrade);if(!r.length)return 0;return Math.round(r.reduce((a,q)=>a+(q.score/q.total)*100,0)/r.length);};
-const availQs=()=>{const done=Object.keys(S.completedDays).filter(k=>S.completedDays[k]).map(Number);return QUIZ_BANK.filter(q=>done.includes(q.day));};
+var availQs=()=>{const done=Object.keys(S.completedDays).filter(k=>S.completedDays[k]).map(Number);return QUIZ_BANK.filter(q=>done.includes(q.day));};
 const completedTopics=()=>{const done=Object.keys(S.completedDays).filter(k=>S.completedDays[k]).map(Number);return Object.keys(SCENARIOS).filter(t=>DAYS.filter(d=>done.includes(d.day)).some(d=>d.topic.toLowerCase().includes(t.toLowerCase().split(' ')[0])||t==='Mixed'));};
 const nextAssessment=()=>{const cur=curDay();return ASSESSMENTS.find(a=>a.week>=cur.week)||null;};
 const daysToAssessment=()=>{const a=nextAssessment();if(!a)return null;const cur=curDay();return Math.max(0,(a.week-cur.week)*5-(curDay().day%5));};
@@ -821,7 +819,7 @@ function sw(t){S.tab=t;render();}
 function openComplete(id){S.modal={type:'complete',dayId:id,conf:0,note:''};render();}
 function setConf(n){S.modal.conf=n;for(let i=1;i<=5;i++){const el=document.getElementById('s'+i);if(el)el.textContent=i<=n?'★':'☆';}}
 function doComplete(){const id=S.modal.dayId,note=document.getElementById('cn')?.value||'',conf=S.modal.conf||0,today=new Date().toDateString();S.completedDays[id]=new Date().toISOString();if(note)S.dayNotes[id]=note;if(conf)S.dayConf[id]=conf;if(!S.studiedDates.includes(today)){S.studiedDates.push(today);const yest=new Date(Date.now()-86400000).toDateString();S.streak=S.lastStudy===yest?S.streak+1:1;S.lastStudy=today;}S.modal=null;sv();render();}
-function saveMidNote(id){const ta=document.getElementById('mid-note-ta');if(ta){S.midNotes[id]=ta.value;sv();const btn=event.target;btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save note';},1500);}}
+saveMidNote = function(id){const ta=document.getElementById('mid-note-ta');if(ta){S.midNotes[id]=ta.value;sv();const btn=event.target;btn.textContent='Saved ✓';setTimeout(()=>{btn.textContent='Save note';},1500);}}
 function saveLog(){const o=document.getElementById('lf-obj')?.value?.trim(),r=document.getElementById('lf-risk')?.value?.trim(),p=document.getElementById('lf-path')?.value?.trim(),n=document.getElementById('lf-notes')?.value?.trim();if(!o||!r||!p){alert('Please fill in the first three fields.');return;}S.advisoryLog.unshift({objective:o,risk:r,path:p,notes:n,date:new Date().toLocaleDateString()});S.modal=null;sv();render();}
 function updateLog(idx){const o=document.getElementById('lf-obj')?.value?.trim(),r=document.getElementById('lf-risk')?.value?.trim(),p=document.getElementById('lf-path')?.value?.trim(),n=document.getElementById('lf-notes')?.value?.trim();if(!o||!r||!p){alert('Please fill in the first three fields.');return;}S.advisoryLog[idx]={...S.advisoryLog[idx],objective:o,risk:r,path:p,notes:n};S.modal=null;sv();render();}
 function editLog(idx){S.modal={type:'logedit',idx};render();}
@@ -868,7 +866,7 @@ if(typeof S.midNotes === 'undefined') S.midNotes = ld('midNotes', {});
 
 // Override rToday for collapsed/expanded view
 const _origRToday = rToday;
-function rToday(){
+rToday = function(){
   const cur=curDay();
   const due=DAYS.filter(d=>isDue(d.day));
   let h='';
@@ -904,7 +902,7 @@ function saveMidNoteV4(id){const ta=document.getElementById('mid-note-ta');if(ta
 
 // Override doComplete to reset todayExpanded
 const _origDoComplete = doComplete;
-function doComplete(){
+doComplete = function(){
   const id=S.modal.dayId,note=document.getElementById('cn')?.value||'',conf=S.modal.conf||0,today=new Date().toDateString();
   S.completedDays[id]=new Date().toISOString();if(note)S.dayNotes[id]=note;if(conf)S.dayConf[id]=conf;
   S.todayExpanded=false;
@@ -914,7 +912,7 @@ function doComplete(){
 
 // Override rProgress to remove standalone % and use 2-col stats
 const _origRProgress = rProgress;
-function rProgress(){
+rProgress = function(){
   let h=`<div class="stats">
     <div class="stat"><div class="stat-v">${tc()}<span style="font-size:16px;font-weight:400;color:var(--text4)"> days</span></div><div class="stat-l">Completed</div></div>
     <div class="stat"><div class="stat-v" style="color:${avgScore()>=80?'var(--success)':avgScore()>=60?'var(--warn)':'var(--accent)'}">${avgScore()}%</div><div class="stat-l">Quiz avg</div></div>
@@ -952,11 +950,11 @@ function rNotes(){
 
 // Override availQs to include AI questions
 const _origAvailQs = availQs;
-function availQs(){const done=Object.keys(S.completedDays).filter(k=>S.completedDays[k]).map(Number);return [...QUIZ_BANK,...(S.aiQuestions||[])].filter(q=>done.includes(q.day));}
+availQs = function(){const done=Object.keys(S.completedDays).filter(k=>S.completedDays[k]).map(Number);return [...QUIZ_BANK,...(S.aiQuestions||[])].filter(q=>done.includes(q.day));}
 
 // Override rQuiz to add AI generation + save-word button + generating state
 const _origRQuiz = rQuiz;
-function rQuiz(){
+rQuiz = function(){
   if(S.quizMode==='generating'){return `<div style="text-align:center;padding:50px 14px"><div style="font-size:36px;margin-bottom:10px">🤖</div><div style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:6px">Generating fresh questions</div><div class="loading-dots" style="justify-content:center"><span></span><span></span><span></span></div><div style="font-size:13px;color:var(--text4);margin-top:10px">This takes about 10 seconds</div></div>`;}
   if(!S.quiz){
     const av=availQs(),fl=S.flaggedQs.map(id=>[...QUIZ_BANK,...(S.aiQuestions||[])].find(q=>q.id===id)).filter(Boolean);
@@ -989,7 +987,7 @@ function openSaveWord(ctx){S.modal={type:'saveword',context:ctx};render();}
 
 // Patch rRef to add save-word button
 const _origRRef = rRef;
-function rRef(){
+rRef = function(){
   let h=_origRRef();
   // Add save-word button at bottom
   h+=`<div style="margin-top:13px;text-align:center"><button class="save-word-btn" style="font-size:13px;padding:8px 14px" onclick="openSaveWord('Quick reference reading')">+ Save a word to glossary</button></div>`;
@@ -998,7 +996,7 @@ function rRef(){
 
 // Patch addWord modal handling for type:'saveword'
 const _origRModal = rModal;
-function rModal(){
+rModal = function(){
   document.querySelectorAll('.modal-overlay').forEach(e=>e.remove());
   if(!S.modal)return;
   const ov=document.createElement('div');ov.className='modal-overlay';ov.onclick=e=>{if(e.target===ov){S.modal=null;render();}};
@@ -1032,7 +1030,7 @@ async function generateAIQuestions(){
 
 // Override startQuiz to use combined bank
 const _origStartQuiz = startQuiz;
-function startQuiz(mode){
+startQuiz = function(mode){
   const allBank=[...QUIZ_BANK,...(S.aiQuestions||[])];
   let pool;
   if(mode==='flagged'){pool=S.flaggedQs.map(id=>allBank.find(q=>q.id===id)).filter(Boolean);}
@@ -1047,7 +1045,7 @@ function generateMoreCases(topic){S.caseState={scenario:null,userResponse:'',gra
 
 // Override sw to also patch the notes tab
 const _origSw = sw;
-function sw(t){S.tab=t;render();}
+sw = function(t){S.tab=t;render();}
 
 
 // ── QUICK LOOKUP ─────────────────────────────────────────────────────────────
@@ -1101,7 +1099,7 @@ function checkPhaseUnlock(dayId){
 
 
 // Override doComplete to add phase unlock check
-const _origDoCompleteV5 = typeof _origDoCompleteV5!=='undefined' ? _origDoCompleteV5 : (typeof _origDoComplete!=='undefined' ? _origDoComplete : null);
+const _origDoCompleteV5 = doComplete;
 doComplete = function(){
   const id=S.modal.dayId,note=document.getElementById('cn')?.value||'',conf=S.modal.conf||0,today=new Date().toDateString();
   S.completedDays[id]=new Date().toISOString();if(note)S.dayNotes[id]=note;if(conf)S.dayConf[id]=conf;
@@ -1162,10 +1160,12 @@ rToday = function(){
 
 
 // Change fact every visit (session-based, not daily)
-if(!window._wallcrossSessionFact){
-  window._wallcrossSessionFact = COMPLIANCE_FACTS[Math.floor(Math.random()*COMPLIANCE_FACTS.length)];
-}
-getDailyFact = function(){ return window._wallcrossSessionFact; };
+getDailyFact = function(){
+  if(!window._wallcrossSessionFact){
+    window._wallcrossSessionFact = COMPLIANCE_FACTS[Math.floor(Math.random()*COMPLIANCE_FACTS.length)];
+  }
+  return window._wallcrossSessionFact;
+};
 
 
 // Add custom case button to dashboard
