@@ -546,9 +546,9 @@ function applyDark(){document.body.className=S.dark?'dark':'';document.getElemen
 
 // ── Render ────────────────────────────────────────────────────────────────────
 function render(){
-  document.getElementById('streak-val').textContent=S.streak;
-  document.getElementById('pct-val').textContent=pct();
-  document.getElementById('prog-fill').style.width=pct()+'%';
+  const _sv=document.getElementById('streak-val');if(_sv)_sv.textContent=S.streak;
+  const _pv=document.getElementById('pct-val');if(_pv)_pv.textContent=pct();
+  const _pf=document.getElementById('prog-fill');if(_pf)_pf.style.width=pct()+'%';
   // assessment countdown
   const da=daysToAssessment(),na=nextAssessment();
   const ab=document.getElementById('assess-bar');
